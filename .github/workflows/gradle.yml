@@ -33,5 +33,3 @@ jobs:
       with:
         gradle-version: 8.5
         arguments: build
-    - name: Run Unit Tests
-      run: ./gradlew test
