@@ -30,19 +30,21 @@ public class Main {
 
     // endregion
 
-    public static void main(String[] args) {
+    public static int main(String[] args) {
         logger.info("TBox Saturator started.\n");
         System.out.println("TBox Saturator\n");
 
         if(!parseArgs(args)) {
             help();
-            System.exit(1);
+            return 1;
         }
 
         switch (command) {
             case NoCommand, Help -> help();
             case Saturate -> saturate();
         }
+
+        return 0;
     }
 
     // region private methods
