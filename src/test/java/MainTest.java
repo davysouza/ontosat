@@ -21,10 +21,11 @@ public class MainTest {
             "                   prints this help message\r\n" +
             "    -o --ontology\r\n" +
             "                   <ontology path to be saturated>\r\n" +
-            "    -s --saturation-request\r\n" +
-            "                   <path to the assertions used to saturate the ontology>\r\n" +
             "    -O --saturated-ontology\r\n" +
-            "                   <saturated ontology path>\r\n";
+            "                   <saturated ontology path>\r\n" +
+            "    -a --add-class\r\n" +
+            "                   add a named class for each new restriction added during\r\n" +
+            "                   the saturation process\r\n";
 
     private static final String headerContent = "TBox Saturator\n\r\n";
 
@@ -75,9 +76,7 @@ public class MainTest {
     public void testSaturation() {
         String[] args = {
                 "-o",
-                "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\ontology.owl",
-                "-s",
-                "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\saturation-request.owl"
+                "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\ontology.owl"
         };
 
         // Assertions.assertEquals(0, Main.main(args));

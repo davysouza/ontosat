@@ -18,9 +18,9 @@ public class Main {
 
     private static File ontologyFile;
 
-    private static File saturationRequestFile;
-
     private static String saturatedOntologyPath = System.getProperty("user.home") + "\\Desktop\\saturated_ontology.owl";
+
+    private static boolean addRestrictionClass = false;
 
     private enum Command {
         NoCommand,
@@ -67,12 +67,12 @@ public class Main {
                 switch (args[i++]) {
                     case "-h", "--help" -> command = Command.Help;
                     case "-o", "--ontology" -> ontologyFile = new File(args[i++]);
-                    case "-s", "--saturation-request" -> saturationRequestFile = new File(args[i++]);
                     case "-O", "--saturated-ontology" -> saturatedOntologyPath = args[i++];
+                    case "-a", "--add-class" -> addRestrictionClass = true;
                 }
             }
 
-            if(command == Command.Saturate && (ontologyFile == null || saturationRequestFile == null)) {
+            if(command == Command.Saturate && ontologyFile == null) {
                 System.out.println("Missing arguments.");
                 logger.error("Missing arguments.");
 
@@ -97,7 +97,7 @@ public class Main {
 
         try {
             Saturator saturator = new Saturator(ontologyFile);
-            OWLOntology saturatedOntology = saturator.saturate();
+            OWLOntology saturatedOntology = saturator.saturate(addRestrictionClass);
 
             logger.info("Saving ontology...");
             OntologyHelper.save(saturatedOntology, saturatedOntologyPath);
@@ -117,10 +117,11 @@ public class Main {
         System.out.println("                   prints this help message");
         System.out.println("    -o --ontology");
         System.out.println("                   <ontology path to be saturated>");
-        System.out.println("    -s --saturation-request");
-        System.out.println("                   <path to the assertions used to saturate the ontology>");
         System.out.println("    -O --saturated-ontology");
         System.out.println("                   <saturated ontology path>");
+        System.out.println("    -a --add-class");
+        System.out.println("                   add a named class for each new restriction added during");
+        System.out.println("                   the saturation process");
     }
 
     // endregion

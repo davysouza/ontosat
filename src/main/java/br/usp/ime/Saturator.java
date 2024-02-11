@@ -47,16 +47,17 @@ public class Saturator {
 
     /**
      * Saturates ontology
+     * @param addRestrictionClass If true, add restrictions as a named class
      * @return An OWLOntology instance of the saturated ontology
      */
-    public OWLOntology saturate() {
+    public OWLOntology saturate(boolean addRestrictionClass) {
         try {
             saturatedOntology = ontologyManager.createOntology();
             ontologyManager.addAxioms(saturatedOntology, ontology.getAxioms());
 
             for(OWLAxiom axiom : saturatedOntology.getAxioms()) {
                 if(axiom instanceof OWLObjectPropertyAssertionAxiom) {
-                    saturateWithProperty((OWLObjectPropertyAssertionAxiom) axiom);
+                    saturateWithProperty((OWLObjectPropertyAssertionAxiom) axiom, addRestrictionClass);
                 }
             }
 
@@ -69,7 +70,6 @@ public class Saturator {
             return null;
         }
     }
-
     // endregion
 
     // region private methods
@@ -93,15 +93,33 @@ public class Saturator {
         ontologyManager.addAxiom(saturatedOntology, owlEquivalentClassesAxiom);
     }
 
-    private void saturateWithProperty(OWLObjectPropertyAssertionAxiom property) {
+    private void addClassWithRestriction(OWLObjectPropertyAssertionAxiom property, OWLClass owlClass) {
+        OWLClass newClass = owlDataFactory.getOWLClass(getClassIRI(property, owlClass));
+        addClass(newClass);
+        addRestriction(property, owlClass, newClass);
+    }
+
+    private void addRestrictionToSubject(OWLObjectPropertyAssertionAxiom property, OWLClass owlClass, OWLIndividual subject) {
+        OWLObjectSomeValuesFrom owlObjectSomeValuesFrom =
+                owlDataFactory.getOWLObjectSomeValuesFrom(property.getProperty(), owlClass);
+
+        OWLClassAssertionAxiom classAssertionAxiom =
+                owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
+
+        ontologyManager.addAxiom(saturatedOntology, classAssertionAxiom);
+    }
+
+    private void saturateWithProperty(OWLObjectPropertyAssertionAxiom property, boolean addRestrictionClass) {
         OWLIndividual object = property.getObject();
+        OWLIndividual subject = property.getSubject();
 
         for(OWLClassAssertionAxiom assertionAxiom : saturatedOntology.getClassAssertionAxioms(object)) {
             for(OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
-                OWLClass newClass = owlDataFactory.getOWLClass(getClassIRI(property, owlClass));
-
-                addClass(newClass);
-                addRestriction(property, owlClass, newClass);
+                if(addRestrictionClass) {
+                    addClassWithRestriction(property, owlClass);
+                } else {
+                    addRestrictionToSubject(property, owlClass, subject);
+                }
             }
         }
     }
