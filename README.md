@@ -8,7 +8,7 @@ This application aims to saturate the ontology and add these logical inferences 
 For each role assertion `r(A, B)` from the **original ontology**, the aplication retrieves all the classes `C` associated with the **object** individual and add a new axiom of the form $\exists$ `r.C` into the **subject** indvidual. Alternativelly, users have the option to create a new class instead of adding axioms to the **subject** individual. At this case, a new class named `rC` equivalent to $\exists$ `r.C` is added to the ontology.
 
 > [!NOTE]
-> Given a role assertion `r(A, B)`, the individual `A` is known as the *subject individual* and `B` is known as the *object individual*.
+> Given a role assertion `r(A, B)`, the individual `A` is known as the *subject individual* while `B` is known as the *object individual*.
 
 ## Requirements
 
