@@ -1,7 +1,7 @@
 # TBox Saturator
 An application to saturate a TBox based on role assertions of a given ontology.
 
-Given the role assertion `relation(A, B)` and the class assertion `Politician(B)` the logical inference $\exists$ `relation.Politician` naturally follows. However, existing reasoners such as ELK or HermiT only make inferences in terms of known classes, limiting their ability to deduce such axioms in their set of consequences.
+Given the role assertion `relation(A, B)` and the class assertion `Politician(B)` the axiom $\exists$ `relation.Politician(A)` naturally follows. However, existing reasoners such as ELK or HermiT only make inferences in terms of known classes, limiting their ability to deduce such axioms in their set of consequences.
 
 This application aims to saturate the ontology and add these logical inferences into the ontology.
 
