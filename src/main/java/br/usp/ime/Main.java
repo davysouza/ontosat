@@ -34,6 +34,10 @@ public class Main {
         logger.info("TBox Saturator started.\n");
         System.out.println("TBox Saturator\n");
 
+        args = new String[2];
+        args[0] = "-o";
+        args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\ontology2.owl";
+
         if(!parseArgs(args)) {
             help();
             return ;
@@ -97,7 +101,7 @@ public class Main {
 
         try {
             Saturator saturator = new Saturator(ontologyFile);
-            OWLOntology saturatedOntology = saturator.saturate(addRestrictionClass);
+            OWLOntology saturatedOntology = saturator.saturate();
 
             logger.info("Saving ontology...");
             OntologyHelper.save(saturatedOntology, saturatedOntologyPath);

@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Saturates the TBox w.r.t. the role assertions found at the ABox. <br/>
@@ -19,15 +22,21 @@ public class Saturator {
     // region attributes
     private static Logger logger = LoggerFactory.getLogger(Saturator.class);
 
+    // region ontology
     private OWLOntologyManager ontologyManager;
-
     private OWLDataFactory owlDataFactory;
-
     private OWLOntology ontology;
-
     private OWLOntology saturatedOntology;
+    // endregion ontology
 
-    // endregion
+    // region graph
+    private static final int UNVISITED = -1;
+    private static final int EXPLORED = 0;
+    private static final int VISITED = 1;
+    private Map<OWLIndividual, Map<OWLIndividual, OWLObjectProperty>> graph;
+    private HashMap<OWLIndividual, Integer> nodes;
+    // endregion graph
+    // endregion attributes
 
     // region public methods
 
@@ -43,21 +52,18 @@ public class Saturator {
         owlDataFactory = OWLManager.getOWLDataFactory();
         ontologyManager = OWLManager.createOWLOntologyManager();
         ontology = ontologyManager.loadOntologyFromOntologyDocument(ontologyFile);
+
+        createRelationGraph();
     }
 
-    /**
-     * Saturates ontology
-     * @param addRestrictionClass If true, add restrictions as a named class
-     * @return An OWLOntology instance of the saturated ontology
-     */
-    public OWLOntology saturate(boolean addRestrictionClass) {
+    public OWLOntology saturate() {
         try {
             saturatedOntology = ontologyManager.createOntology();
             ontologyManager.addAxioms(saturatedOntology, ontology.getAxioms());
 
-            for(OWLAxiom axiom : saturatedOntology.getAxioms()) {
-                if(axiom instanceof OWLObjectPropertyAssertionAxiom) {
-                    saturateWithProperty((OWLObjectPropertyAssertionAxiom) axiom, addRestrictionClass);
+            for (OWLNamedIndividual individual : ontology.getIndividualsInSignature()) {
+                if (nodes.get(individual) == UNVISITED) {
+                    ontologyManager.addAxioms(saturatedOntology, DFS(null, individual));
                 }
             }
 
@@ -74,55 +80,92 @@ public class Saturator {
 
     // region private methods
 
-    private IRI getClassIRI(OWLObjectPropertyAssertionAxiom property, OWLClass owlClass) {
-        String propertyName = property.getProperty().getNamedProperty().getIRI().getRemainder().get();
-        String className = owlClass.getIRI().getRemainder().get();
-        String namespace = owlClass.getIRI().getNamespace();
+    private void createRelationGraph() {
+        logger.info("Creating graph of relations");
 
-        return IRI.create(namespace + propertyName + className);
-    }
+        graph = new HashMap<>();
+        nodes = new HashMap<>();
 
-    private void addClass(OWLClass newClass) {
-        OWLAxiom declarationAxiom = owlDataFactory.getOWLDeclarationAxiom(newClass);
-        ontologyManager.addAxiom(saturatedOntology, declarationAxiom);
-    }
+        for (OWLNamedIndividual individual : ontology.getIndividualsInSignature()) {
+            graph.put(individual, new HashMap<>());
+            nodes.put(individual, UNVISITED);
+        }
 
-    private void addRestriction(OWLObjectPropertyAssertionAxiom property, OWLClass originalClass, OWLClass newClass) {
-        OWLObjectSomeValuesFrom owlObjectSomeValuesFrom = owlDataFactory.getOWLObjectSomeValuesFrom(property.getProperty(), originalClass);
-        OWLEquivalentClassesAxiom owlEquivalentClassesAxiom = owlDataFactory.getOWLEquivalentClassesAxiom(newClass, owlObjectSomeValuesFrom);
-        ontologyManager.addAxiom(saturatedOntology, owlEquivalentClassesAxiom);
-    }
+        for (OWLAxiom axiom : ontology.getAxioms()) {
+            if (axiom instanceof OWLObjectPropertyAssertionAxiom) {
+                OWLObjectPropertyAssertionAxiom propertyAssertion = (OWLObjectPropertyAssertionAxiom) axiom;
+                OWLObjectProperty property = propertyAssertion.getProperty().getNamedProperty();
 
-    private void addClassWithRestriction(OWLObjectPropertyAssertionAxiom property, OWLClass owlClass) {
-        OWLClass newClass = owlDataFactory.getOWLClass(getClassIRI(property, owlClass));
-        addClass(newClass);
-        addRestriction(property, owlClass, newClass);
-    }
+                OWLIndividual subject = propertyAssertion.getSubject();
+                OWLIndividual object = propertyAssertion.getObject();
 
-    private void addRestrictionToSubject(OWLObjectPropertyAssertionAxiom property, OWLClass owlClass, OWLIndividual subject) {
-        OWLObjectSomeValuesFrom owlObjectSomeValuesFrom =
-                owlDataFactory.getOWLObjectSomeValuesFrom(property.getProperty(), owlClass);
-
-        OWLClassAssertionAxiom classAssertionAxiom =
-                owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
-
-        ontologyManager.addAxiom(saturatedOntology, classAssertionAxiom);
-    }
-
-    private void saturateWithProperty(OWLObjectPropertyAssertionAxiom property, boolean addRestrictionClass) {
-        OWLIndividual object = property.getObject();
-        OWLIndividual subject = property.getSubject();
-
-        for(OWLClassAssertionAxiom assertionAxiom : saturatedOntology.getClassAssertionAxioms(object)) {
-            for(OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
-                if(addRestrictionClass) {
-                    addClassWithRestriction(property, owlClass);
-                } else {
-                    addRestrictionToSubject(property, owlClass, subject);
-                }
+                graph.get(subject).put(object, property);
             }
         }
     }
 
+    private ArrayList<OWLAxiom> DFS(OWLIndividual parent, OWLIndividual node) {
+        nodes.put(node, EXPLORED);
+
+        ArrayList<OWLAxiom> axioms = new ArrayList<>();
+
+        graph.get(node).forEach((u, property) -> {
+            if (nodes.get(u) == UNVISITED) {
+                axioms.addAll(DFS(node, u));
+            }
+        });
+
+        if (parent != null) {
+            var property = graph.get(parent).get(node);
+
+            axioms.addAll(createRoleAssertionAxioms(axioms, parent, property));
+            axioms.addAll(createClassAssertionAxioms(parent, node, property));
+        }
+
+        nodes.put(node, VISITED);
+
+        return axioms;
+    }
+
+    private ArrayList<OWLAxiom> createRoleAssertionAxioms(ArrayList<OWLAxiom> axioms,
+                                                          OWLIndividual subject,
+                                                          OWLObjectProperty property) {
+        ArrayList<OWLAxiom> newAxioms = new ArrayList<>();
+
+        for (OWLAxiom axiom : axioms) {
+            OWLClassAssertionAxiom classAssertionAxiom = (OWLClassAssertionAxiom) axiom;
+
+            OWLObjectSomeValuesFrom owlObjectSomeValuesFrom =
+                    owlDataFactory.getOWLObjectSomeValuesFrom(property, classAssertionAxiom.getClassExpression());
+
+            classAssertionAxiom = owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
+
+            newAxioms.add(classAssertionAxiom);
+        }
+
+        axioms.addAll(newAxioms);
+
+        return axioms;
+    }
+
+    private ArrayList<OWLAxiom> createClassAssertionAxioms(OWLIndividual subject,
+                                                           OWLIndividual object,
+                                                           OWLObjectProperty property) {
+        ArrayList<OWLAxiom> axioms = new ArrayList<>();
+
+        for(OWLClassAssertionAxiom assertionAxiom : saturatedOntology.getClassAssertionAxioms(object)) {
+            for(OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
+                OWLObjectSomeValuesFrom owlObjectSomeValuesFrom =
+                        owlDataFactory.getOWLObjectSomeValuesFrom(property, owlClass);
+
+                OWLClassAssertionAxiom classAssertionAxiom =
+                        owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
+
+                axioms.add(classAssertionAxiom);
+            }
+        }
+
+        return axioms;
+    }
     // endregion
 }
