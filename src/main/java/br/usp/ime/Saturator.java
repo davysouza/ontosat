@@ -15,7 +15,9 @@ import java.util.Map;
  *
  * For each role assertion <b>r(x,y)</b> we find all classes <b>C</b> such
  * that <b>C(y)</b> is in the ABox. For each class found we saturate the
- * TBox with a new class <b>rC</b> equivalent to: <b>"rC : r some C"</b>
+ * TBox with a new restriction equivalent to: <b>"r some C"</b>.
+ * On the other hand, for each role assertion in the format <b>s(y,z)<b/>,
+ * we add the restriction r some (s some X) where X is an assertion.
  */
 public class Saturator {
 
@@ -112,6 +114,11 @@ public class Saturator {
         graph.get(node).forEach((u, property) -> {
             if (nodes.get(u) == UNVISITED) {
                 axioms.addAll(DFS(node, u));
+            } else if (nodes.get(u) == EXPLORED) {
+                logger.info("DFS: Cycle found.");
+
+                axioms.addAll(createRoleAssertionAxioms(axioms, node, property));
+                axioms.addAll(createClassAssertionAxioms(node, u, property));
             }
         });
 

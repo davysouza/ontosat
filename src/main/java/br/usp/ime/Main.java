@@ -20,8 +20,6 @@ public class Main {
 
     private static String saturatedOntologyPath = System.getProperty("user.home") + "\\Desktop\\saturated_ontology.owl";
 
-    private static boolean addRestrictionClass = false;
-
     private enum Command {
         NoCommand,
         Help,
@@ -34,9 +32,9 @@ public class Main {
         logger.info("TBox Saturator started.\n");
         System.out.println("TBox Saturator\n");
 
-        args = new String[2];
-        args[0] = "-o";
-        args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\ontology2.owl";
+        // args = new String[2];
+        // args[0] = "-o";
+        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
 
         if(!parseArgs(args)) {
             help();
@@ -72,7 +70,6 @@ public class Main {
                     case "-h", "--help" -> command = Command.Help;
                     case "-o", "--ontology" -> ontologyFile = new File(args[i++]);
                     case "-O", "--saturated-ontology" -> saturatedOntologyPath = args[i++];
-                    case "-a", "--add-class" -> addRestrictionClass = true;
                 }
             }
 
