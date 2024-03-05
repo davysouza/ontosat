@@ -55,9 +55,9 @@
 
 
 
-    <!-- http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Student -->
+    <!-- http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Ambassador -->
 
-    <Class rdf:about="http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Student"/>
+    <Class rdf:about="http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Ambassador"/>
 
 
     <!--
@@ -98,7 +98,7 @@
     <!-- http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Charlie -->
 
     <NamedIndividual rdf:about="http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Charlie">
-        <rdf:type rdf:resource="http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Student"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Ambassador"/>
         <paper-sample:friend rdf:resource="http://www.semanticweb.org/davys/ontologies/2023/8/paper-sample/Albert"/>
     </NamedIndividual>
 </rdf:RDF>

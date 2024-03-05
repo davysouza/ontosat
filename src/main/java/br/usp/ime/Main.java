@@ -34,7 +34,7 @@ public class Main {
 
         // args = new String[2];
         // args[0] = "-o";
-        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
+        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\04-ontology-sample-roles-cycle.owl";
 
         if(!parseArgs(args)) {
             help();
