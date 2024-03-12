@@ -1,5 +1,6 @@
 package br.usp.ime;
 
+import org.apache.commons.io.FilenameUtils;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,9 @@ public class Main {
 
     private static File ontologyFile;
 
-    private static String saturatedOntologyPath = System.getProperty("user.home") + "\\Desktop\\saturated_ontology.owl";
+    private static String saturatedOntologyPath = System.getProperty("user.home") + "\\Desktop\\";
+
+    private static boolean customOutputPath = false;
 
     private enum Command {
         NoCommand,
@@ -34,7 +37,8 @@ public class Main {
 
         // args = new String[2];
         // args[0] = "-o";
-        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\04-ontology-sample-roles-cycle.owl";
+        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\01-ontology-cade-28.owl";
+        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
 
         if(!parseArgs(args)) {
             help();
@@ -69,7 +73,10 @@ public class Main {
                 switch (args[i++]) {
                     case "-h", "--help" -> command = Command.Help;
                     case "-o", "--ontology" -> ontologyFile = new File(args[i++]);
-                    case "-O", "--saturated-ontology" -> saturatedOntologyPath = args[i++];
+                    case "-O", "--saturated-ontology" -> {
+                        saturatedOntologyPath = args[i++];
+                        customOutputPath = true;
+                    }
                 }
             }
 
@@ -101,7 +108,13 @@ public class Main {
             OWLOntology saturatedOntology = saturator.saturate();
 
             logger.info("Saving ontology...");
-            OntologyHelper.save(saturatedOntology, saturatedOntologyPath);
+
+            String outputPath = saturatedOntologyPath;
+            if (!customOutputPath) {
+                outputPath += FilenameUtils.removeExtension(ontologyFile.getName()) + "-saturated.owl";
+            }
+
+            OntologyHelper.save(saturatedOntology, outputPath);
         } catch (Exception e) {
             System.out.println("Error while saturating.");
 

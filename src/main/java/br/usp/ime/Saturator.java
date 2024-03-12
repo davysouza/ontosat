@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Saturates the TBox w.r.t. the role assertions found at the ABox. <br/>
+ * Saturates the ontology w.r.t. the existent assertions. <br/>
  *
  * For each role assertion <b>r(x,y)</b> we find all classes <b>C</b> such
  * that <b>C(y)</b> is in the ABox. For each class found we saturate the
