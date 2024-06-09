@@ -1,2 +1,2 @@
-rootProject.name = "tbox-saturator"
+rootProject.name = "ontosat"
 

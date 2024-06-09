@@ -15,7 +15,7 @@ public class MainTest {
 
     // region expected values
     private static final String helpContent =
-            "Usage: java -cp tbox-saturator.jar [options]\r\n\r\n" +
+            "Usage: java -cp ontosat.jar [options]\r\n\r\n" +
             "where options include:\r\n" +
             "    -h --help\r\n" +
             "                   prints this help message\r\n" +
@@ -76,7 +76,7 @@ public class MainTest {
     public void testSaturation() {
         String[] args = {
                 "-o",
-                "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\ontology.owl"
+                "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\ontology.owl"
         };
 
         // Assertions.assertEquals(0, Main.main(args));

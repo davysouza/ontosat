@@ -37,8 +37,8 @@ public class Main {
 
         // args = new String[2];
         // args[0] = "-o";
-        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\01-ontology-cade-28.owl";
-        // args[1] = "C:\\Projetos\\tbox-saturator\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
+        // args[1] = "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\01-ontology-cade-28.owl";
+        // args[1] = "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
 
         if(!parseArgs(args)) {
             help();
@@ -124,7 +124,7 @@ public class Main {
     }
 
     private static void help() {
-        System.out.println("Usage: java -cp tbox-saturator.jar [options]");
+        System.out.println("Usage: java -cp ontosat.jar [options]");
         System.out.println();
         System.out.println("where options include:");
         System.out.println("    -h --help");
