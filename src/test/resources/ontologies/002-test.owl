@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ontology-test="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/"/>
+
+
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r -->
+
+    <ObjectProperty rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r"/>
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/a -->
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/a">
+        <ontology-test:r rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b"/>
+    </NamedIndividual>
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b -->
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b" />
+</rdf:RDF>
+
+
+
