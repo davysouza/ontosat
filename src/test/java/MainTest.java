@@ -1,6 +1,7 @@
 import br.usp.ime.Main;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayOutputStream;
@@ -18,16 +19,16 @@ public class MainTest {
             "Usage: java -cp ontosat.jar [options]\r\n\r\n" +
             "where options include:\r\n" +
             "    -h --help\r\n" +
-            "                   prints this help message\r\n" +
-            "    -o --ontology\r\n" +
-            "                   <ontology path to be saturated>\r\n" +
-            "    -O --saturated-ontology\r\n" +
-            "                   <saturated ontology path>\r\n" +
-            "    -a --add-class\r\n" +
-            "                   add a named class for each new restriction added during\r\n" +
-            "                   the saturation process\r\n";
+            "                   prints the help message\r\n" +
+            "    -i --ontology\r\n" +
+            "                   <specifies the path to the input ontology>\r\n" +
+            "    -o --saturated-ontology\r\n" +
+            "                   <specifies the path where the saturated ontology will be stored>\r\n" +
+            "    -m --mode\r\n" +
+            "                   defines the saturation mode, which can be either \"assertional\" or\r\n" +
+            "                   \"terminological\". The \"assertional\" mode is selected by default\r\n";
 
-    private static final String headerContent = "TBox Saturator\n\r\n";
+    private static final String headerContent = "OntoSat\n\r\n";
 
     // endregion
 
@@ -56,20 +57,43 @@ public class MainTest {
     // region tests
     @Test
     public void testNoParameter() {
-        // Assertions.assertEquals(1, Main.main(null));
+        Main.main(null);
 
-        // String expected = headerContent + helpContent;
-        // Assertions.assertEquals(expected, outContent.toString());
+        String expected = headerContent + helpContent;
+        Assertions.assertEquals(expected, outContent.toString());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"-h", "--help"})
     public void testHelper(String argument) {
-        // String[] args = { argument };
-        // Assertions.assertEquals(0, Main.main(args));
+        String[] args = { argument };
+        Main.main(args);
 
-        // String expected = headerContent + helpContent;
-        // Assertions.assertEquals(expected, outContent.toString());
+        String expected = headerContent + helpContent;
+        Assertions.assertEquals(expected, outContent.toString());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"-m,invalid", "--mode,invalid"})
+    public void testInvalidMode(String command, String mode) {
+        String[] args = { command, mode };
+        Main.main(args);
+
+        String error = "Error while parsing arguments.\r\n"
+                + "Exception caught: Invalid saturation mode\n\r\n";
+        String expected = headerContent + error + helpContent;
+        Assertions.assertEquals(expected, outContent.toString());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"-m,terminological", "--mode,terminological"})
+    public void testMissingArguments(String command, String mode) {
+        String[] args = { command, mode };
+        Main.main(args);
+
+        String error = "Missing arguments.\r\n";
+        String expected = headerContent + error + helpContent;
+        Assertions.assertEquals(expected, outContent.toString());
     }
 
     @Test

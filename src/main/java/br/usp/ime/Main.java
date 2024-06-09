@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Objects;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -16,6 +17,8 @@ public class Main {
     private static Logger logger = LoggerFactory.getLogger(Main.class);
 
     private static Command command = Command.NoCommand;
+
+    private static SaturationMode saturationMode = SaturationMode.Assertional;
 
     private static File ontologyFile;
 
@@ -29,14 +32,19 @@ public class Main {
         Saturate
     };
 
+    private enum SaturationMode {
+        Assertional,
+        Terminological
+    }
+
     // endregion
 
     public static void main(String[] args) {
-        logger.info("TBox Saturator started.\n");
-        System.out.println("TBox Saturator\n");
+        logger.info("OntoSat started.\n");
+        System.out.println("OntoSat\n");
 
         // args = new String[2];
-        // args[0] = "-o";
+        // args[0] = "-i";
         // args[1] = "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\01-ontology-cade-28.owl";
         // args[1] = "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
 
@@ -72,10 +80,20 @@ public class Main {
             while(i < args.length) {
                 switch (args[i++]) {
                     case "-h", "--help" -> command = Command.Help;
-                    case "-o", "--ontology" -> ontologyFile = new File(args[i++]);
-                    case "-O", "--saturated-ontology" -> {
+                    case "-i", "--ontology" -> ontologyFile = new File(args[i++]);
+                    case "-o", "--saturated-ontology" -> {
                         saturatedOntologyPath = args[i++];
                         customOutputPath = true;
+                    }
+                    case "-m", "--mode" -> {
+                        String mode = args[i++];
+                        if (mode.equals("assertional")) {
+                            saturationMode = SaturationMode.Assertional;
+                        } else if (mode.equals("terminological")) {
+                            saturationMode = SaturationMode.Terminological;
+                        } else {
+                            throw new Exception("Invalid saturation mode");
+                        }
                     }
                 }
             }
@@ -89,6 +107,7 @@ public class Main {
 
         } catch (Exception e) {
             System.out.println("Error while parsing arguments.");
+            System.out.println("Exception caught: " + e.getMessage() + "\n");
 
             logger.error("Error while parsing arguments.");
             logger.debug("Exception caught: " + e.getMessage());
@@ -128,14 +147,14 @@ public class Main {
         System.out.println();
         System.out.println("where options include:");
         System.out.println("    -h --help");
-        System.out.println("                   prints this help message");
-        System.out.println("    -o --ontology");
-        System.out.println("                   <ontology path to be saturated>");
-        System.out.println("    -O --saturated-ontology");
-        System.out.println("                   <saturated ontology path>");
-        System.out.println("    -a --add-class");
-        System.out.println("                   add a named class for each new restriction added during");
-        System.out.println("                   the saturation process");
+        System.out.println("                   prints the help message");
+        System.out.println("    -i --ontology");
+        System.out.println("                   <specifies the path to the input ontology>");
+        System.out.println("    -o --saturated-ontology");
+        System.out.println("                   <specifies the path where the saturated ontology will be stored>");
+        System.out.println("    -m --mode");
+        System.out.println("                   defines the saturation mode, which can be either \"assertional\" or");
+        System.out.println("                   \"terminological\". The \"assertional\" mode is selected by default");
     }
 
     // endregion

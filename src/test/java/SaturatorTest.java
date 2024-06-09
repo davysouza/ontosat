@@ -20,7 +20,7 @@ public class SaturatorTest {
 
     @Test
     public void testConstructorInvalidFile() {
-        String resourceName = "invalid-ontology-file.owl";
+        String resourceName = "ontologies/000-invalid-file.owl";
 
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(resourceName).getFile());
