@@ -160,15 +160,22 @@ public class Saturator {
                                                            OWLObjectProperty property) {
         ArrayList<OWLAxiom> axioms = new ArrayList<>();
 
-        for(OWLClassAssertionAxiom assertionAxiom : saturatedOntology.getClassAssertionAxioms(object)) {
-            for(OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
-                OWLObjectSomeValuesFrom owlObjectSomeValuesFrom =
-                        owlDataFactory.getOWLObjectSomeValuesFrom(property, owlClass);
+        if(saturatedOntology.getClassAssertionAxioms(object).isEmpty()) {
+            OWLClass thingClass = owlDataFactory.getOWLClass("Thing");
+            OWLObjectSomeValuesFrom owlObjectSomeValuesFrom = owlDataFactory.getOWLObjectSomeValuesFrom(property, thingClass);
+            OWLClassAssertionAxiom classAssertionAxiom  = owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
+            axioms.add(classAssertionAxiom);
+        } else {
+            for(OWLClassAssertionAxiom assertionAxiom : saturatedOntology.getClassAssertionAxioms(object)) {
+                for(OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
+                    OWLObjectSomeValuesFrom owlObjectSomeValuesFrom =
+                            owlDataFactory.getOWLObjectSomeValuesFrom(property, owlClass);
 
-                OWLClassAssertionAxiom classAssertionAxiom =
-                        owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
+                    OWLClassAssertionAxiom classAssertionAxiom =
+                            owlDataFactory.getOWLClassAssertionAxiom(owlObjectSomeValuesFrom, subject);
 
-                axioms.add(classAssertionAxiom);
+                    axioms.add(classAssertionAxiom);
+                }
             }
         }
 
