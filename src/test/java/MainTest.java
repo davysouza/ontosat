@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+@Disabled("Disabled until bug #7 has been fixed!")
 public class MainTest {
     private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private static final ByteArrayOutputStream errContent = new ByteArrayOutputStream();

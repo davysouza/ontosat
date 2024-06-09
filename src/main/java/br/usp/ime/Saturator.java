@@ -21,8 +21,17 @@ import java.util.Map;
  */
 public class Saturator {
 
-    // region attributes
+    // region public attributes
+    public enum SaturationMode {
+        Assertional,
+        Terminological
+    }
+    // endregion public attributes
+
+    // region private attributes
+
     private static Logger logger = LoggerFactory.getLogger(Saturator.class);
+    private SaturationMode saturationMode = SaturationMode.Assertional;
 
     // region ontology
     private OWLOntologyManager ontologyManager;
@@ -38,9 +47,10 @@ public class Saturator {
     private Map<OWLIndividual, Map<OWLIndividual, OWLObjectProperty>> graph;
     private HashMap<OWLIndividual, Integer> nodes;
     // endregion graph
-    // endregion attributes
 
-    // region public methods
+    // endregion private attributes
+
+    // region constructors
 
     /**
      * Initializes the saturator with the specified ontology
@@ -57,6 +67,22 @@ public class Saturator {
 
         createRelationGraph();
     }
+
+    /**
+     * Initializes the saturator with the specified ontology
+     * @param ontologyFile A File instance related to the specified ontology
+     * @param saturationMode Saturation mode. Assertional mode selected by default.
+     * @throws OWLOntologyCreationException Could not load the ontology from
+     * the specified file.
+     */
+    public Saturator(File ontologyFile, SaturationMode saturationMode) throws OWLOntologyCreationException {
+        this(ontologyFile);
+        this.saturationMode = saturationMode;
+    }
+
+    // endregion constructors
+
+    // region public methods
 
     public OWLOntology saturate() {
         try {

@@ -18,7 +18,7 @@ public class Main {
 
     private static Command command = Command.NoCommand;
 
-    private static SaturationMode saturationMode = SaturationMode.Assertional;
+    private static Saturator.SaturationMode saturationMode = Saturator.SaturationMode.Assertional;
 
     private static File ontologyFile;
 
@@ -31,11 +31,6 @@ public class Main {
         Help,
         Saturate
     };
-
-    private enum SaturationMode {
-        Assertional,
-        Terminological
-    }
 
     // endregion
 
@@ -88,9 +83,9 @@ public class Main {
                     case "-m", "--mode" -> {
                         String mode = args[i++];
                         if (mode.equals("assertional")) {
-                            saturationMode = SaturationMode.Assertional;
+                            saturationMode = Saturator.SaturationMode.Assertional;
                         } else if (mode.equals("terminological")) {
-                            saturationMode = SaturationMode.Terminological;
+                            saturationMode = Saturator.SaturationMode.Terminological;
                         } else {
                             throw new Exception("Invalid saturation mode");
                         }
@@ -123,7 +118,7 @@ public class Main {
         logger.info("Starting saturation...");
 
         try {
-            Saturator saturator = new Saturator(ontologyFile);
+            Saturator saturator = new Saturator(ontologyFile, saturationMode);
             OWLOntology saturatedOntology = saturator.saturate();
 
             logger.info("Saving ontology...");
