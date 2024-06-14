@@ -1,12 +1,12 @@
-package br.usp.ime;
+package br.usp.ime.ontosat;
 
+import br.usp.ime.ontosat.utils.OntologyHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Objects;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -38,14 +38,15 @@ public class Main {
         logger.info("OntoSat started.\n");
         System.out.println("OntoSat\n");
 
-        // args = new String[2];
+        // args = new String[4];
         // args[0] = "-i";
-        // args[1] = "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\01-ontology-cade-28.owl";
-        // args[1] = "C:\\Projetos\\ontosat\\src\\main\\resources\\ontologies\\02-ontology-jelia-23.owl";
+        // args[1] = "C:\\Projetos\\ontosat\\src\\test\\resources\\ontologies\\101-sample-jelia-23.owl";
+        // args[2] = "-o";
+        // args[3] = "C:\\Projetos\\ontosat\\src\\test\\resources\\responses\\101-sample-jelia-23-saturated.owl";
 
-        if(!parseArgs(args)) {
+        if (!parseArgs(args)) {
             help();
-            return ;
+            return;
         }
 
         switch (command) {

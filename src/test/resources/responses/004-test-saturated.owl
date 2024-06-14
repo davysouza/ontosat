@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ontology-test="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/">
+    <Ontology/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r -->
+
+
+    <ObjectProperty rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r"/>
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/s -->
+
+
+    <ObjectProperty rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/s"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/A -->
+
+
+    <Class rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/A"/>
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/B -->
+
+
+    <Class rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/B"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/a -->
+
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/a">
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/A"/>
+            </Restriction>
+        </rdf:type>
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/B"/>
+            </Restriction>
+        </rdf:type>
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/r"/>
+                <someValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+            </Restriction>
+        </rdf:type>
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/s"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/A"/>
+            </Restriction>
+        </rdf:type>
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/s"/>
+                <someValuesFrom rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/B"/>
+            </Restriction>
+        </rdf:type>
+        <rdf:type>
+            <Restriction>
+                <onProperty rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/s"/>
+                <someValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+            </Restriction>
+        </rdf:type>
+        <ontology-test:r rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b"/>
+        <ontology-test:r rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/c"/>
+        <ontology-test:s rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b"/>
+        <ontology-test:s rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/c"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b -->
+
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/b">
+        <rdf:type rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/A"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/B"/>
+    </NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/c -->
+
+
+    <NamedIndividual rdf:about="http://www.semanticweb.org/davys/ontologies/2024/6/ontology-test/c"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 5.5.0.2023-01-14T12:41:38Z) https://github.com/owlcs/owlapi/ -->
+
+

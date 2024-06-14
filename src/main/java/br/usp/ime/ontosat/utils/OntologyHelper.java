@@ -1,4 +1,4 @@
-package br.usp.ime;
+package br.usp.ime.ontosat.utils;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
@@ -23,7 +23,6 @@ public class OntologyHelper {
     private static Logger logger = LoggerFactory.getLogger(OntologyHelper.class);
 
     private static OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
-
     // endregion
 
     // region public methods
