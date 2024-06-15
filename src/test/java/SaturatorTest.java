@@ -61,6 +61,7 @@ public class SaturatorTest {
             "ontologies/024-test.owl,responses/024-test-saturated.owl",
             "ontologies/025-test.owl,responses/025-test-saturated.owl",
             "ontologies/026-test.owl,responses/026-test-saturated.owl",
+            "ontologies/027-test.owl,responses/027-test-saturated.owl",
             "ontologies/100-sample-cade-28.owl,responses/100-sample-cade-28-saturated.owl",
             "ontologies/101-sample-jelia-23.owl,responses/101-sample-jelia-23-saturated.owl",
     })

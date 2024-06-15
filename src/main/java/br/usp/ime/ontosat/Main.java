@@ -38,11 +38,11 @@ public class Main {
         logger.info("OntoSat started.\n");
         System.out.println("OntoSat\n");
 
-        // args = new String[4];
-        // args[0] = "-i";
-        // args[1] = "C:\\Projetos\\ontosat\\src\\test\\resources\\ontologies\\101-sample-jelia-23.owl";
-        // args[2] = "-o";
-        // args[3] = "C:\\Projetos\\ontosat\\src\\test\\resources\\responses\\101-sample-jelia-23-saturated.owl";
+//        args = new String[4];
+//        args[0] = "-i";
+//        args[1] = "C:\\Projetos\\ontosat\\src\\test\\resources\\ontologies\\027-test.owl";
+//        args[2] = "-o";
+//        args[3] = "C:\\Projetos\\ontosat\\src\\test\\resources\\responses\\027-test-saturated.owl";
 
         if (!parseArgs(args)) {
             help();

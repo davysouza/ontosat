@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Saturates the ontology w.r.t. the existent assertions. <br/>
@@ -24,7 +23,8 @@ public class Saturator {
     // region public attributes
 
     /**
-     * Saturation modes
+     * Saturation modes can be either assertional or terminological.
+     * Assertional mode is selected by default.
      */
     public enum SaturationMode {
         /// Assertional mode saturates the ontology with new assertions
@@ -35,17 +35,27 @@ public class Saturator {
         /// equivalent to axioms inferred during the saturation process.
         Terminological
     }
+
     // endregion public attributes
 
     // region private attributes
 
     private static Logger logger = LoggerFactory.getLogger(Saturator.class);
+
     private SaturationMode saturationMode = SaturationMode.Assertional;
 
     // region ontology
     private OWLOntologyManager ontologyManager;
     private OWLDataFactory owlDataFactory;
+
+    /**
+     * Loaded ontology
+     */
     private OWLOntology ontology;
+
+    /**
+     * Saturated ontology
+     */
     private OWLOntology saturatedOntology;
     // endregion ontology
 
@@ -85,13 +95,15 @@ public class Saturator {
      * the specified file.
      */
     public Saturator(File ontologyFile) throws OWLOntologyCreationException {
-        logger.info("Initializing saturator");
+        logger.info("Initializing saturator...");
 
         owlDataFactory = OWLManager.getOWLDataFactory();
         ontologyManager = OWLManager.createOWLOntologyManager();
         ontology = ontologyManager.loadOntologyFromOntologyDocument(ontologyFile);
 
         createGraph();
+
+        logger.info("Saturator initialized.");
     }
 
     /**
@@ -115,6 +127,9 @@ public class Saturator {
      * @return An {@link OWLOntology} object of the saturated ontology.
      */
     public OWLOntology saturate() {
+        logger.info("Starting saturation...");
+        logger.info("[mode]: {}", saturationMode);
+
         try {
             saturatedOntology = ontologyManager.createOntology();
             ontologyManager.addAxioms(saturatedOntology, ontology.getAxioms());
@@ -128,20 +143,22 @@ public class Saturator {
                 }
             }
 
-            return saturatedOntology;
         } catch (OWLOntologyCreationException e) {
             logger.error("Failed to saturate ontology.");
             logger.debug("Exception caught: " + e.getMessage());
 
             return null;
         }
+
+        logger.info("Saturation successfully completed.");
+        return saturatedOntology;
     }
     // endregion
 
     // region private methods
 
     private void createGraph() {
-        logger.info("Creating graph of relations");
+        logger.info("Creating graph...");
 
         graph = new HashMap<>();
         nodes = new HashMap<>();
@@ -158,6 +175,8 @@ public class Saturator {
                 addEdge((OWLObjectPropertyAssertionAxiom) axiom);
             }
         }
+
+        logger.info("Graph created.");
     }
 
     private void addNode(OWLIndividual individual) {
@@ -222,6 +241,7 @@ public class Saturator {
      * @param subject An {@link OWLOntology} representing the subject individual
      * @param properties A {@link Set<OWLObjectProperty>} of the properties that
      *                   connect subject to the object.
+     * @param object An {@link OWLOntology} instance of the object individual
      * @return An {@link Set<OWLAxiom>} of the new axioms.
      */
     private Set<OWLAxiom> createAxiomsFromChain(Set<OWLAxiom> axioms,
@@ -269,7 +289,7 @@ public class Saturator {
                                                               Set<OWLObjectProperty> properties) {
         ArrayList<OWLAxiom> axioms = new ArrayList<>();
 
-        if (saturatedOntology.getClassAssertionAxioms(object).isEmpty()) {
+        if (ontology.getClassAssertionAxioms(object).isEmpty()) {
             OWLClass thingClass = owlDataFactory.getOWLThing();
 
             for (OWLObjectProperty property : properties) {
@@ -280,15 +300,13 @@ public class Saturator {
                 }
             }
         } else {
-            for (OWLClassAssertionAxiom assertionAxiom : saturatedOntology.getClassAssertionAxioms(object)) {
-                if (assertionAxiom.getClassExpression() instanceof OWLClass) {
-                    for (OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
-                        for (OWLObjectProperty property : properties) {
-                            if (saturationMode == SaturationMode.Assertional) {
-                                axioms.add(createClassAssertionAxiom(property, owlClass, subject));
-                            } else {
-                                axioms.addAll(createEquivalentClassesAxiom(property, owlClass));
-                            }
+            for (OWLClassAssertionAxiom assertionAxiom : ontology.getClassAssertionAxioms(object)) {
+                for (OWLClass owlClass : assertionAxiom.getClassesInSignature()) {
+                    for (OWLObjectProperty property : properties) {
+                        if (saturationMode == SaturationMode.Assertional) {
+                            axioms.add(createClassAssertionAxiom(property, owlClass, subject));
+                        } else {
+                            axioms.addAll(createEquivalentClassesAxiom(property, owlClass));
                         }
                     }
                 }
