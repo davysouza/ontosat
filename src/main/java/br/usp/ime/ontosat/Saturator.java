@@ -224,7 +224,7 @@ public class Saturator {
             if (nodes.get(u) == NodeStatus.UNVISITED) {
                 axioms.addAll(createAxiomsFromChain(DFS(u), node, properties, u));
             } else if (nodes.get(u) == NodeStatus.VISITED) {
-                axioms.addAll(createAxiomsFromChain(responses.get(u),node, properties, u));
+                axioms.addAll(createAxiomsFromChain(responses.get(u), node, properties, u));
             }
         });
 

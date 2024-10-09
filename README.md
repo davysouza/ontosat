@@ -69,3 +69,6 @@ To run the existing unit tests, execute:
 ```Batchfile
 ./gradlew test
 ```
+
+## Documentation
+ - [Master's Thesis - Davy Souza](docs/Davy_Masters_thesis.pdf)
